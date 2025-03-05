@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:36:20 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/01 09:24:47 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:28:38 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # define MAX_PHILOSOPHERS 250
 
@@ -55,15 +56,16 @@ void    assign_forks(t_philo *philo);  // New function added
 
 // threads.c
 void    start_thread(t_table *table);
-void    *philo_routine(void *arg);
+void 	*philo_routine(void *arg);
 
 // routine.c
 void    eat(t_philo *philo);
 void    sleep_think(t_philo *philo);
 
 // monitor.c
-void    *monitor_routine(void *arg);
+bool is_all_eat(t_philo *philos);
 void    grim_reaper(t_table *table);  // New function added
+void *monitor_routine(void *arg);
 
 // utils.c
 size_t	get_time(void);

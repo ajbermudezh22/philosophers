@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:47:53 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/01 09:20:44 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:06:36 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ void print_status(t_philo *philo, char *msg)
 {
 	if (!philo || !philo->table || !msg)
 	{
-		ft_printf("DEBUG: Null value in print_status()\n");
+		printf("DEBUG: Null value in print_status()\n");
 		return;
 	}
 
 	pthread_mutex_lock(&philo->table->print_lock);
 	if (!philo->table->dead)
-		ft_printf("%zu %d %s\n", get_time() - philo->table->philos[0].last_meal, philo->id, msg);
+		printf("%zu %d %s\n", get_time() - philo->table->philos[0].last_meal, philo->id, msg);
 	pthread_mutex_unlock(&philo->table->print_lock);
 }
 

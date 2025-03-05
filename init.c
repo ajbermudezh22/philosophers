@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:24:05 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/01 09:25:32 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:07:05 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	parse_args(int argc, char **argv, t_table *table)
 {
 	if (argc < 5 || argc > 6)
-		return (ft_printf("Usage: ./philo num_philos time_to_die time_to_eat time_to_sleep [num_times_to_eat]\n"), 1);
+		return (printf("Usage: ./philo num_philos time_to_die time_to_eat time_to_sleep [num_times_to_eat]\n"), 1);
 	table->num_philos = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
@@ -28,7 +28,7 @@ int	parse_args(int argc, char **argv, t_table *table)
 
 	if (table->num_philos <= 0 || table->num_philos >= MAX_PHILOSOPHERS ||
 		table->time_to_die <= 0 || table->time_to_eat <= 0 || table->time_to_sleep <= 0)
-		return (ft_printf("Invalid arguments\n"));
+		return (printf("Invalid arguments\n"));
 	return (0);
 }
 
@@ -65,7 +65,7 @@ void	init_table(t_table *table)
 	table->philos = malloc(sizeof(t_philo) * table->num_philos);
 	if (!table->forks || !table->philos)
 	{
-		ft_printf("Error: Memory allocation failed\n");
+		printf("Error: Memory allocation failed\n");
 		exit(1);
 	}
 
