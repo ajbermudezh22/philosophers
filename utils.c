@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:47:53 by albbermu          #+#    #+#             */
-/*   Updated: 2025/02/26 16:00:14 by albbermu         ###   ########.fr       */
+/*   Updated: 2025/03/01 09:20:44 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,50 @@ int	ft_usleep(size_t ms)
 	return (0);
 }
 
-void	print_status(t_philo *philo, char *msg)
+void print_status(t_philo *philo, char *msg)
 {
+	if (!philo || !philo->table || !msg)
+	{
+		ft_printf("DEBUG: Null value in print_status()\n");
+		return;
+	}
+
 	pthread_mutex_lock(&philo->table->print_lock);
 	if (!philo->table->dead)
 		ft_printf("%zu %d %s\n", get_time() - philo->table->philos[0].last_meal, philo->id, msg);
 	pthread_mutex_unlock(&philo->table->print_lock);
 }
 
-void	cleanup(t_table *table)
+
+
+
+
+void cleanup(t_table *table)
 {
-	int i;
-	
-	i = 0;
-	while (i <= table->num_philos)
-	{
-		pthread_mutex_destroy(&table->forks[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&table->print_lock);
-	pthread_mutex_destroy(&table->death_lock);
-	free(table->forks);
-	free(table->philos);
+    int i;
+
+    if (!table || !table->forks || !table->philos)
+        return;
+
+    i = 0;
+    while (i < table->num_philos)
+    {
+        pthread_mutex_destroy(&table->forks[i]);
+        i++;
+    }
+
+    pthread_mutex_destroy(&table->print_lock);
+    pthread_mutex_destroy(&table->death_lock);
+
+    if (table->forks)
+    {
+        free(table->forks);
+        table->forks = NULL;
+    }
+    if (table->philos)
+    {
+        free(table->philos);
+        table->philos = NULL;
+    }
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 10:47:07 by albbermu          #+#    #+#             */
-/*   Updated: 2025/02/26 14:23:42 by albbermu         ###   ########.fr       */
+/*   Updated: 2025/02/26 20:10:44 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 		return (1);
 	init_table(&table);
 	init_philosophers(&table);
-	start_threads(&table);
+	start_thread(&table);
 	cleanup(&table);
 	return (0);
 }
