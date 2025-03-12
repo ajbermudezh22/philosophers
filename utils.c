@@ -5,81 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 11:47:53 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/01 09:20:44 by albermud         ###   ########.fr       */
+/*   Created: 2025/03/08 15:44:47 by albermud          #+#    #+#             */
+/*   Updated: 2025/03/08 15:44:48 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	usage_error(char *s)
+size_t	get_current_time(void)
 {
-	ft_printf("Error\n%s\n", s);
-	exit(EXIT_FAILURE);
+	struct timeval	tv;
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-size_t	get_time(void)
+void	custom_usleep(size_t ms)
 {
-	struct	timeval time;
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
-	
-}
-
-int	ft_usleep(size_t ms)
-{
-	size_t	start;
-
-	start = get_time();
-	while ((get_time() - start) < ms)
+	size_t	start = get_current_time();
+	while (get_current_time() - start < ms)
 		usleep(500);
-	return (0);
 }
 
-void print_status(t_philo *philo, char *msg)
+void	print_message(t_philosopher *philo, char *msg)
 {
-	if (!philo || !philo->table || !msg)
-	{
-		ft_printf("DEBUG: Null value in print_status()\n");
-		return;
-	}
+	t_environment *env = philo->env;
 
-	pthread_mutex_lock(&philo->table->print_lock);
-	if (!philo->table->dead)
-		ft_printf("%zu %d %s\n", get_time() - philo->table->philos[0].last_meal, philo->id, msg);
-	pthread_mutex_unlock(&philo->table->print_lock);
+	pthread_mutex_lock(&env->print_lock);
+	if (env->simulation_running)
+		printf("%zu %d %s\n", get_current_time() - philo->times.start_time, philo->id, msg);
+	pthread_mutex_unlock(&env->print_lock);
 }
-
-
-
-
-
-void cleanup(t_table *table)
-{
-    int i;
-
-    if (!table || !table->forks || !table->philos)
-        return;
-
-    i = 0;
-    while (i < table->num_philos)
-    {
-        pthread_mutex_destroy(&table->forks[i]);
-        i++;
-    }
-
-    pthread_mutex_destroy(&table->print_lock);
-    pthread_mutex_destroy(&table->death_lock);
-
-    if (table->forks)
-    {
-        free(table->forks);
-        table->forks = NULL;
-    }
-    if (table->philos)
-    {
-        free(table->philos);
-        table->philos = NULL;
-    }
-}
-

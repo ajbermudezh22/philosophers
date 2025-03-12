@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 16:06:13 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/01 09:23:18 by albermud         ###   ########.fr       */
+/*   Created: 2025/03/08 15:44:29 by albermud          #+#    #+#             */
+/*   Updated: 2025/03/08 15:52:58 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,27 @@
 
 void *monitor_routine(void *arg)
 {
-    t_table *table = (t_table *)arg;
-
-    while (!table->dead)
-    {
-        grim_reaper(table); // Call grim_reaper function to check for philosopher deaths
-        usleep(1000); // Small delay to prevent excessive CPU usage
-    }
-    return (NULL);
-}
-
-
-void grim_reaper(t_table *table)
-{
+    t_environment *env = (t_environment *)arg;
     int i;
 
-    i = 0;
-    while (i < table->num_philos)
+    while (env->simulation_running)
     {
-        pthread_mutex_lock(&table->death_lock);
-        if ((get_time() - table->philos[i].last_meal) > table->time_to_die)
+        for (i = 0; i < env->num_philos; i++)
         {
-            print_status(&table->philos[i], "died");
-            table->dead = 1;
-            pthread_mutex_unlock(&table->death_lock);
-            return;
+            pthread_mutex_lock(&env->death_lock);
+            if ((get_current_time() - env->philosophers[i].times.last_meal) > env->philosophers[i].times.time_to_die)
+            {
+                print_message(&env->philosophers[i], "died");
+                env->simulation_running = 0;
+                pthread_mutex_unlock(&env->death_lock);
+
+                // ✅ Ensure all philosopher threads see the stop condition
+                return NULL;
+            }
+            pthread_mutex_unlock(&env->death_lock);
         }
-        pthread_mutex_unlock(&table->death_lock);
-        i++;
+        usleep(1000);  // Prevent excessive CPU usage
     }
+    return NULL;
 }
 
