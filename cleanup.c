@@ -5,40 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/08 15:47:43 by albermud          #+#    #+#             */
-/*   Updated: 2025/03/08 15:47:45 by albermud         ###   ########.fr       */
+/*   Created: 2025/03/15 15:25:03 by albermud          #+#    #+#             */
+/*   Updated: 2025/03/15 15:59:44 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void cleanup_environment(t_environment *env)
+void	cleanup(t_table *table)
 {
-    int i;
+	int	i;
 
-    if (!env)
-        return;
-
-    // Destroy all fork mutexes
-    for (i = 0; i < env->num_philos; i++)
-        pthread_mutex_destroy(&env->forks[i].mutex);
-
-    // Destroy other mutexes
-    pthread_mutex_destroy(&env->print_lock);
-    pthread_mutex_destroy(&env->death_lock);
-
-    // Free allocated memory
-    if (env->forks)
-    {
-        free(env->forks);
-        env->forks = NULL;
-    }
-
-    if (env->philosophers)
-    {
-        free(env->philosophers);
-        env->philosophers = NULL;
-    }
-
-    printf("✅ Cleanup completed. Resources freed successfully.\n");
+	if (!table || !table->forks || !table->philos)
+		return ;
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&table->print_lock);
+	pthread_mutex_destroy(&table->death_lock);
+	if (table->forks)
+	{
+		free(table->forks);
+		table->forks = NULL;
+	}
+	if (table->philos)
+	{
+		free(table->philos);
+		table->philos = NULL;
+	}
 }

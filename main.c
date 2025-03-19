@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/08 15:44:00 by albermud          #+#    #+#             */
-/*   Updated: 2025/03/08 15:44:01 by albermud         ###   ########.fr       */
+/*   Created: 2025/02/26 10:47:07 by albbermu          #+#    #+#             */
+/*   Updated: 2025/03/15 15:43:09 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 
 int	main(int argc, char **argv)
 {
-	t_environment	env;
+	t_table	table;
 
-	if (argc < 5 || argc > 6)
-	{
-		printf("Usage: ./philo num_philos time_to_die time_to_eat time_to_sleep [num_times_to_eat]\n");
+	if (parse_args(argc, argv, &table))
 		return (1);
-	}
-
-	init_environment(&env, argv);
-	start_simulation(&env);
-	cleanup_environment(&env);
+	init_table(&table);
+	init_philosophers(&table);
+	start_thread(&table);
+	cleanup(&table);
+	printf("✅ Simulation ended. Exiting program.\n");
 	return (0);
 }
