@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:36:20 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/15 15:52:37 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:02:58 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_philo
 	int				meals_eaten;
 	size_t			last_meal;
 	pthread_t		thread;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	struct s_table	*table;
@@ -64,9 +65,13 @@ void	philo_eat(t_philo *philo);
 void	sleep_think(t_philo *philo);
 
 // monitor.c
-bool	is_all_eat(t_philo *philos);
 void	grim_reaper(t_table *table);
 void	*monitor_routine(void *arg);
+
+// monitor_utils.c
+void	set_dead_and_print(t_table *table, t_philo *philo);
+void	lock_unlock_meal_if_full(t_table *table, t_philo *philo, int *count);
+bool	is_all_eat(t_philo *philos);
 
 // utils.c
 size_t	get_time(void);

@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:24:05 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/15 15:57:15 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:27:57 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	init_table(t_table *table)
 	while (i < table->num_philos)
 	{
 		pthread_mutex_init(&table->forks[i], NULL);
+		pthread_mutex_init(&table->philos[i].meal_lock, NULL);
 		i++;
 	}
 }

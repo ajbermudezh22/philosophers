@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 15:25:03 by albermud          #+#    #+#             */
-/*   Updated: 2025/03/15 15:59:44 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:44:07 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,13 @@ void	cleanup(t_table *table)
 	while (i < table->num_philos)
 	{
 		pthread_mutex_destroy(&table->forks[i]);
+		pthread_mutex_destroy(&table->philos[i].meal_lock);
 		i++;
 	}
 	pthread_mutex_destroy(&table->print_lock);
 	pthread_mutex_destroy(&table->death_lock);
-	if (table->forks)
-	{
-		free(table->forks);
-		table->forks = NULL;
-	}
-	if (table->philos)
-	{
-		free(table->philos);
-		table->philos = NULL;
-	}
+	free(table->forks);
+	free(table->philos);
+	table->forks = NULL;
+	table->philos = NULL;
 }
