@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:47:53 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/15 16:33:03 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/30 18:53:34 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,19 @@ int	ft_usleep(size_t ms)
 
 void	print_status(t_philo *philo, char *msg)
 {
+	bool	is_dead;
+
 	if (!philo || !philo->table || !msg)
 		return ;
 	pthread_mutex_lock(&philo->table->print_lock);
 	pthread_mutex_lock(&philo->table->death_lock);
-	if (!philo->table->dead)
-		printf("%zu %d %s\n", get_time()
-			- philo->table->start_time, philo->id, msg);
+	is_dead = philo->table->dead;
 	pthread_mutex_unlock(&philo->table->death_lock);
+	if (!is_dead || (msg[0] == 'd' && msg[1] == 'i'))
+	{
+		printf("%zu %d %s\n",
+			get_time() - philo->table->start_time, philo->id, msg);
+	}
 	pthread_mutex_unlock(&philo->table->print_lock);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:01:00 by albermud          #+#    #+#             */
-/*   Updated: 2025/03/21 17:01:27 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:47:11 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,29 @@ void	set_dead_and_print(t_table *table, t_philo *philo)
 void	lock_unlock_meal_if_full(t_table *table, t_philo *philo, int *count)
 {
 	pthread_mutex_lock(&philo->meal_lock);
-	if (philo->meals_eaten >= table->must_eat_count)
+	if (!philo->done_eating && philo->meals_eaten >= table->must_eat_count)
+	{
+		philo->done_eating = true;
 		(*count)++;
+	}
 	pthread_mutex_unlock(&philo->meal_lock);
 }
 
-bool	is_all_eat(t_philo *philos)
+bool	is_all_eat(t_table *table)
 {
-	int	i;
-	int	finished;
+	int		i;
 
 	i = 0;
-	finished = 0;
-	if (philos[0].table->must_eat_count == -1)
-		return (false);
-	while (i < philos[0].table->num_philos)
+	while (i < table->num_philos)
 	{
-		pthread_mutex_lock(&philos[i].meal_lock);
-		if (philos[i].meals_eaten >= philos[i].table->must_eat_count)
-			finished++;
-		pthread_mutex_unlock(&philos[i].meal_lock);
+		pthread_mutex_lock(&table->philos[i].meal_lock);
+		if (!table->philos[i].done_eating)
+		{
+			pthread_mutex_unlock(&table->philos[i].meal_lock);
+			return (false);
+		}
+		pthread_mutex_unlock(&table->philos[i].meal_lock);
 		i++;
 	}
-	return (finished == philos[0].table->num_philos);
+	return (true);
 }

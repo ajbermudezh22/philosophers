@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:24:05 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/21 16:27:57 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:49:34 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,12 @@ void	init_table(t_table *table)
 	pthread_mutex_init(&table->death_lock, NULL);
 	table->forks = malloc(sizeof(pthread_mutex_t) * table->num_philos);
 	table->philos = malloc(sizeof(t_philo) * table->num_philos);
-	table->start_time = get_time();
+	table->start_time = 0;
 	if (!table->forks || !table->philos)
 	{
 		printf("Error: Memory allocation failed\n");
 		exit(1);
 	}
-	table->start_time = get_time();
 	while (i < table->num_philos)
 	{
 		pthread_mutex_init(&table->forks[i], NULL);
@@ -85,9 +84,10 @@ void	init_philosophers(t_table *table)
 	{
 		table->philos[i].id = i + 1;
 		table->philos[i].meals_eaten = 0;
-		table->philos[i].last_meal = get_time();
+		table->philos[i].last_meal = table->start_time;
 		table->philos[i].table = table;
 		assign_forks(&table->philos[i]);
+		table->philos[i].done_eating = false;
 		i++;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:36:20 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/21 17:02:58 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:53:00 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	struct s_table	*table;
+	bool			done_eating;
 }	t_philo;
 
 typedef struct s_table
@@ -48,6 +49,7 @@ typedef struct s_table
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
 	t_philo			*philos;
+	pthread_t		monitor_thread;
 }	t_table;
 
 // init.c
@@ -71,7 +73,7 @@ void	*monitor_routine(void *arg);
 // monitor_utils.c
 void	set_dead_and_print(t_table *table, t_philo *philo);
 void	lock_unlock_meal_if_full(t_table *table, t_philo *philo, int *count);
-bool	is_all_eat(t_philo *philos);
+bool	is_all_eat(t_table *table);
 
 // utils.c
 size_t	get_time(void);

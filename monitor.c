@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 16:06:13 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/21 17:01:46 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/30 18:53:51 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 bool	check_death(t_table *table, t_philo *philo)
 {
-	bool	is_dead;
 	size_t	time_since_meal;
+	size_t	last_meal;
+	size_t	now;
 
-	is_dead = false;
-	pthread_mutex_lock(&table->death_lock);
-	if (table->dead)
-		is_dead = true;
-	pthread_mutex_unlock(&table->death_lock);
-	if (is_dead)
-		return (true);
 	pthread_mutex_lock(&philo->meal_lock);
-	time_since_meal = get_time() - philo->last_meal;
+	if (philo->done_eating)
+	{
+		pthread_mutex_unlock(&philo->meal_lock);
+		return (false);
+	}
+	last_meal = philo->last_meal;
 	pthread_mutex_unlock(&philo->meal_lock);
+	now = get_time();
+	time_since_meal = now - last_meal;
 	if (time_since_meal > table->time_to_die)
 	{
 		set_dead_and_print(table, philo);
@@ -47,34 +48,49 @@ bool	check_all_full(t_table *table, int full_philos)
 	return (false);
 }
 
+static bool	handle_all_eat(t_table *table)
+{
+	if (table->must_eat_count > 0 && is_all_eat(table))
+	{
+		pthread_mutex_lock(&table->death_lock);
+		if (!table->dead)
+		{
+			table->dead = 1;
+			pthread_mutex_unlock(&table->death_lock);
+			print_status(&table->philos[0],
+				"✅ Simulation ended. Exiting program.");
+			return (true);
+		}
+		pthread_mutex_unlock(&table->death_lock);
+	}
+	return (false);
+}
+
 void	*monitor_routine(void *arg)
 {
 	t_table	*table;
 	int		i;
-	int		full_philos;
 
 	table = (t_table *)arg;
 	while (1)
 	{
 		i = -1;
-		full_philos = 0;
 		while (++i < table->num_philos)
 		{
 			if (check_death(table, &table->philos[i]))
 				return (NULL);
-			if (table->must_eat_count > 0)
-				lock_unlock_meal_if_full(table,
-					&table->philos[i], &full_philos);
 		}
-		if (check_all_full(table, full_philos))
+		if (handle_all_eat(table))
 			return (NULL);
-		usleep(1000);
+		usleep(100);
 	}
 	return (NULL);
 }
 
 void	grim_reaper(t_table *table)
 {
+	if (table->must_eat_count == -1)
+		return ;
 	while (1)
 	{
 		pthread_mutex_lock(&table->death_lock);
@@ -84,7 +100,7 @@ void	grim_reaper(t_table *table)
 			return ;
 		}
 		pthread_mutex_unlock(&table->death_lock);
-		if (is_all_eat(table->philos))
+		if (is_all_eat(table))
 		{
 			pthread_mutex_lock(&table->death_lock);
 			table->dead = 1;
