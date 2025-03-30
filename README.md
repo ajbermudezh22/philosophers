@@ -35,16 +35,11 @@ Example:
 ```
 
 This means:
-
-5 philosophers
-
-A philosopher dies if they don’t eat within 800 ms
-
-Eating takes 200 ms
-
-Sleeping takes 200 ms
-
-Each philosopher must eat at least 7 times
+- 5 philosophers
+- A philosopher dies if they don’t eat within 800 ms
+- Eating takes 200 ms
+- Sleeping takes 200 ms
+- Each philosopher must eat at least 7 times
 
 ⚠️ Important Considerations
 - Philosophers are protected by mutexes representing forks
