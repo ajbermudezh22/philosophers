@@ -6,7 +6,7 @@
 /*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 10:47:07 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/28 11:54:06 by albbermu         ###   ########.fr       */
+/*   Updated: 2025/04/02 12:52:32 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,5 @@ int	main(int argc, char **argv)
 	init_philosophers(&table);
 	start_thread(&table);
 	cleanup(&table);
-	printf("✅ Simulation ended. Exiting program.\n");
 	return (0);
 }

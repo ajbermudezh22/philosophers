@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 16:06:13 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/30 18:53:51 by albermud         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:36:08 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,6 @@ bool	check_death(t_table *table, t_philo *philo)
 	return (false);
 }
 
-bool	check_all_full(t_table *table, int full_philos)
-{
-	if (table->must_eat_count > 0 && full_philos == table->num_philos)
-	{
-		pthread_mutex_lock(&table->death_lock);
-		table->dead = 1;
-		pthread_mutex_unlock(&table->death_lock);
-		return (true);
-	}
-	return (false);
-}
-
 static bool	handle_all_eat(t_table *table)
 {
 	if (table->must_eat_count > 0 && is_all_eat(table))
@@ -57,8 +45,6 @@ static bool	handle_all_eat(t_table *table)
 		{
 			table->dead = 1;
 			pthread_mutex_unlock(&table->death_lock);
-			print_status(&table->philos[0],
-				"✅ Simulation ended. Exiting program.");
 			return (true);
 		}
 		pthread_mutex_unlock(&table->death_lock);
