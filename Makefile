@@ -1,9 +1,9 @@
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -fsanitize=thread -g
+CFLAGS := -Wall -Wextra -Werror
 
 NAME := philo
 
-SRC := main.c init.c routine.c monitor.c monitor_utils.c threads.c utils.c cleanup.c
+SRC := main.c init.c routine.c monitor.c monitor_utils.c threads.c utils.c cleanup.c utils_str.c
 OBJ := $(SRC:.c=.o)
 
 # Colors for Output

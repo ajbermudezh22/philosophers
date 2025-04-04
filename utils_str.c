@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils_str.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: albbermu <albbermu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 10:47:07 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/15 15:43:09 by albermud         ###   ########.fr       */
+/*   Created: 2025/04/04 10:08:23 by albbermu          #+#    #+#             */
+/*   Updated: 2025/04/04 10:08:58 by albbermu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	main(int argc, char **argv)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	t_table	table;
-
-	if (parse_args(argc, argv, &table))
-		return (1);
-	init_table(&table);
-	init_philosophers(&table);
-	start_thread(&table);
-	cleanup(&table);
-	printf("✅ Simulation ended. Exiting program.\n");
-	return (0);
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

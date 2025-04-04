@@ -6,7 +6,7 @@
 /*   By: albermud <albermud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 15:50:47 by albbermu          #+#    #+#             */
-/*   Updated: 2025/03/30 18:46:15 by albermud         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:04:38 by albermud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,6 @@ void	update_meal_status(t_philo *philo)
 	pthread_mutex_lock(&philo->meal_lock);
 	philo->last_meal = get_time();
 	philo->meals_eaten++;
-	if (philo->table->must_eat_count > 0
-		&& philo->meals_eaten >= philo->table->must_eat_count)
-	{
-		philo->done_eating = true;
-	}
 	pthread_mutex_unlock(&philo->meal_lock);
 }
 
@@ -70,6 +65,7 @@ void	philo_eat(t_philo *philo)
 		pthread_mutex_lock(philo->left_fork);
 		print_status(philo, "has taken a fork");
 		ft_usleep(philo->table->time_to_die);
+		print_status(philo, "died");
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_lock(&philo->table->death_lock);
 		philo->table->dead = 1;
@@ -80,8 +76,8 @@ void	philo_eat(t_philo *philo)
 	print_status(philo, "has taken a fork");
 	pthread_mutex_lock(philo->right_fork);
 	print_status(philo, "has taken a fork");
-	update_meal_status(philo);
 	print_status(philo, "is eating");
+	update_meal_status(philo);
 	wait_for_eating(philo);
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
